@@ -1,31 +1,32 @@
-'use strict'
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
 
-const NodemonPlugin = require('nodemon-webpack-plugin')
-
-module.exports = (env = {}) => {
-  const config = {
-    entry: ['./src/app.ts'],
-    mode: env.development? 'development': 'production',
-    target: 'node',
-    devtool: env.development? 'cheap-eval-source-map': false,
-    resolve: {
-      extensions: ['.ts', 'js'],
-      modules: ['node_modules', 'src', 'package.json']
-    },
-    module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          use: 'ts-loader'
+module.exports = {
+  watch: true,
+  mode: 'development',
+  entry: './src/server.ts',
+  target: 'node',
+  externals: [nodeExternals()],
+  devtool: 'inline-source-map',
+  module: {
+    rules: [
+      {
+        loader: 'ts-loader',
+        test: /\.ts$/,
+        exclude: [
+          /node_modules/
+        ],
+        options: {
+          configFile: 'tsconfig.json'
         }
-      ]
-    },
-    plugins: []
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
+  output: {
+    filename: 'server.js',
+    path: path.resolve(__dirname, 'dist')
   }
-  if(env.nodemon) {
-    config.watch = true
-    config.plugins.push(new NodemonPlugin())
-  }
-
-  return config
-}
+};
