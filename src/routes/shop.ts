@@ -7,4 +7,5 @@ shopRoutes.get('/', (req: express.Request, res: express.Response) => {
   res.sendFile(path.join(rootDir, 'views', 'shop.html'))
 })
 
+
 export default shopRoutes 

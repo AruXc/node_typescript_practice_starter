@@ -10,6 +10,7 @@ const app: express.Application = express()
 const port = process.env.PORT || 4000
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.static(path.resolve(__dirname, 'assets')))
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
