@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser'
 
 import { adminRoutes } from './routes/admin'
 import shopRoutes from './routes/shop'
+import { getErrorPage } from '@/controllers/error'
 
 const app: express.Application = express()
 const port = process.env.PORT || 4000
@@ -18,9 +19,7 @@ app.use(express.static(path.resolve(__dirname, 'assets')))
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 
-app.use((req, res) => {
-  res.status(404).render('404', { pageTitle: '404 Page Not Found' })
-})
+app.use(getErrorPage)
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}/`)
