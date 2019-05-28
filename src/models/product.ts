@@ -3,18 +3,24 @@ import * as path from 'path'
 
 import rootDir from '@/util/path'
 
+const p = path.join(rootDir, 'data', 'products.json')
+
+const getProductsFromFile = (cb: any) => {
+  fs.readFile(p, (err, data: any) => {
+    if (err) {
+      return cb([])
+    } else {
+      cb(JSON.parse(data))
+    }
+  })
+}
 class Product {
   title: string
   constructor(t: string) {
     this.title = t
   }
   save() {
-    const p = path.join(rootDir, 'data', 'products.json')
-    fs.readFile(p, (err, data: any) => {
-      let products: any[] = []
-      if (!err) {
-        products = JSON.parse(data)
-      }
+    getProductsFromFile((products: any) => {
       products.push(this)
       fs.writeFile(p, JSON.stringify(products), err => {
         console.log(err)
@@ -22,13 +28,7 @@ class Product {
     })
   }
   static fetchAll(cb: any) {
-    const p = path.join(rootDir, 'data', 'products.json')
-    fs.readFile(p, (err, data: any) => {
-      if (err) {
-        cb([])
-      }
-      cb(JSON.parse(data))
-    })
+    getProductsFromFile(cb)
   }
 }
 
